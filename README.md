@@ -8,9 +8,9 @@ This is a barebones PyTorch implementation of SimCLR on CIFAR10 with ResNet18/Re
 |ResNet34|1024|||||||||
 |ResNet50|512 |||||||||
 
-Standard deviations over 3 runs. Runtimes measured on A100 with 16 CPU workers. `k=...` columns refer to kNN classifiers with cosine distance.
+Standard deviations over 3 runs. Runtimes measured on A100 with 16 CPU workers. `k=...` columns refer to kNN classifiers.
 
-SimCLR training is done only on the training set (not on training+test!) using the same set of data augmentations as in the original SimCLR paper. ResNets are modified by replacing the first convolutional layer and removing the first pooling layer, as described in the original SimCLR paper. The projector has output dimensionality 128 and a hidden layer with 1024 neurons. We use SGD with momentum 0.9, learning rate 0.03⋅batch_size/256 with cosine annealing, and weight decay 0.0005.
+**Training** is done only on the training set --- this is important because doing SimCLR training on training+test sets leads to noticeably higher evaluation results. We use the same set of data augmentations as in the original SimCLR paper. ResNets are modified by replacing the first convolutional layer and removing the first pooling layer, as described in the original SimCLR paper. The projector has output dimensionality 128 and a hidden layer with 1024 neurons. We use SGD with momentum 0.9, learning rate 0.03⋅batch_size/256 with cosine annealing, and weight decay 0.0005.
 
 Evaluation is done on the test set, using the representation before the projector.
 * kNN classifiers (with k=1, k=5, k=10) use cosine distance (this gives better results than with Euclidean distance);

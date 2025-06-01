@@ -4,7 +4,7 @@ This is a barebones PyTorch implementation of SimCLR on CIFAR10 with ResNet18/Re
 
 |Backbone|Batch|Sec/epoch|Loss/batch|k=1|k=5|k=10|lin sklearn|lin frozen|lin trained|
 |--------|-----|----------|----|--------|--------|---------|-----------|-------|----|
-|ResNet18|1024|18.2 s|5.77±.00|||90.4±.1|90.8±.1|90.9±.1|91.1±.1|
+|ResNet18|1024|18.2 s|5.77±.00|89.0±.1|90.3±.1|90.4±.1|90.8±.1|90.9±.1|91.1±.1|
 |ResNet34|1024|||||||||
 |ResNet50|512 |||||||||
 

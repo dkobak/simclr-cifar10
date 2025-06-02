@@ -10,7 +10,7 @@ The code is optimized for readability and hackability. PRs welcome (see below).
 |ResNet34|1024|~22 s||||||||
 |ResNet50|512 |||||||||
 
-Standard deviations over 3 runs. Runtimes measured on A100 with 16 CPU workers (note that the number of available workers strongly affects the runtime). `k=...` columns refer to kNN classifiers.
+Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU workers (note that the number of available workers can strongly affect the runtime). `k=...` columns refer to kNN classifiers.
 
 **Training** is done only on the training set --- this is important because doing SimCLR training on training+test sets leads to noticeably higher evaluation results. We use the same set of data augmentations as in the original SimCLR paper. ResNets are modified by replacing the first convolutional layer and removing the first pooling layer, as described in the original SimCLR paper. The projector has output dimensionality 128 and a hidden layer with 1024 neurons. Following the SimSiam paper, we use SGD with momentum 0.9, learning rate 0.03⋅batch_size/256 with cosine annealing, and weight decay 0.0005.
 

@@ -8,7 +8,7 @@ The code is optimized for readability and hackability. PRs welcome (see below).
 |--------|-----|----------|----|--------|--------|---------|-----------|-------|----|
 |ResNet18|1024|18.2 s|5.77±.00|89.0±.1|90.3±.2|90.4±.1|90.8±.1|90.9±.1|91.1±.1|
 |ResNet34|1024|~22 s||||||||
-|ResNet50|512 |||||||||
+|ResNet50|512 |~38 s||||||||
 
 Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU workers (note that the number of available workers can strongly affect the runtime). `k=...` columns refer to kNN classifiers.
 

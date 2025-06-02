@@ -24,18 +24,18 @@ Pull requests that improve any of these results are very welcome. I can run sugg
 
 ## Comparison with the literature
 
-### ResNet18
+#### ResNet18
 
 * Chen & He (SimSiam paper https://arxiv.org/abs/2011.10566) report **91.1** (Figure D1). They use SGD with momentum, and we borrow their hyperparameters. Here is an unofficial repository implementing their methods: https://github.com/PatrickHua/SimSiam. It uses linear evaluation trained with data augmentations.
 * Evgenia Rusak from the Brendel lab got **91.5±.1** following the SimSiam paper hyperparameters (personal communucation). I do not know why her results are better.
 * Ermolov et al. (W-MSE paper https://arxiv.org/abs/2007.06346) report **91.8** linear accuracy (Table 1). They use Adam on frozen representations for evaluation. They also use Adam for SimCLR training, which I haven not see anywhere else. I tried using Adam with their hyperparameters and scheduler, and I got much worse results. I do not know why. They seem to be using a batch norm layer after the projection head; I do not know if it matters. Their repository is here: https://github.com/htdt/self-supervised.
-* Here is some repository https://github.com/p3i0t/SimCLR-CIFAR10 that claims 92.9 accuracy. It uses SGD with suboptimal hyperparameters (base learning rate 0.36, momentum 1e-6), and some weird implementation choices (like clipping cosine similarity to be non-negative, or accidentally ending up with base learning rate 0.36=0.6*0.6). I was unable to reproduce their results, and I do not trust the claimed 92.9 accuracy.
+* Here is some repository https://github.com/p3i0t/SimCLR-CIFAR10 that claims 92.9 accuracy. It uses SGD with suboptimal hyperparameters (base learning rate 0.36, momentum 1e-6), and some weird implementation choices (like clipping cosine similarity to be non-negative, or accidentally ending up with base learning rate 0.36=0.6*0.6). I was unable to reproduce their results, and I do not trust them.
 
-### ResNet34
+#### ResNet34
 
 I am not aware of any reported results.
 
-### ResNet50
+#### ResNet50
 
-* Chen et al. (SimCLR paper https://arxiv.org/abs/2002.05709) report **94.0** (Appendix B.9). They used a TensorFlow implementation and LARS for optimization. AFAIK nobody has been able to reproduce that number.
 * Evgenia Rusak from the Brendel lab got **93.2±.1** following the SimSiam paper hyperparameters (personal communucation).
+* Chen et al. (SimCLR paper https://arxiv.org/abs/2002.05709) report **94.0** (Appendix B.9). They used a TensorFlow implementation and LARS for optimization. AFAIK nobody has been able to reproduce that number.

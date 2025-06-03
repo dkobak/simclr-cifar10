@@ -151,9 +151,7 @@ for epoch in range(N_EPOCHS):
 
         _, z1 = model(view1)
         _, z2 = model(view2)
-
         loss = infoNCE(torch.cat((z1, z2)))
-
         epoch_loss += loss.item()
 
         loss.backward()
@@ -233,7 +231,7 @@ print(f"Linear accuracy (sklearn): {lin.score(X_test, y_test)}", flush=True)
 ########### LINEAR EVALUATION ON PRECOMPUTED REPRESENTATIONS ##########
 
 N_EPOCHS = 100
-ADAM_LR = 0.1
+ADAM_LR = 0.1    # lr=0.01 requires n_epochs=500 to get similar results
 
 X_train = torch.tensor(X_train, device=device)
 X_test = torch.tensor(X_test, device=device)
@@ -306,9 +304,7 @@ for epoch in range(N_EPOCHS):
 
         h, _ = model(view.to(device))
         logits = classifier(h)
-
         loss = F.cross_entropy(logits, y.to(device))
-        
         epoch_loss += loss.item()
 
         loss.backward()

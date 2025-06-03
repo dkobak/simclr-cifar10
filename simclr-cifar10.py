@@ -284,7 +284,8 @@ cifar10_loader_classifier = DataLoader(
 )
 
 classifier = nn.Linear(model.backbone_output_dim, 10)
-model.backbone.requires_grad = False
+for param in model.backbone.parameters():
+    param.requires_grad = False
 
 optimizer = Adam(classifier.parameters(), lr=ADAM_LR)
 scheduler = CosineAnnealingLR(optimizer, T_max=N_EPOCHS)

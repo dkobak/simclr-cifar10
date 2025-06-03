@@ -25,18 +25,18 @@ Pull requests that improve any of these results are very welcome. I can run sugg
 
 Personally, I prefer `KNeighborsClassifier(n_neighbors=10, metric="cosine")` for evaluation because it is quick, deterministic, and avoids all issues with training a linear readout.
 
-### Training for 100 epochs
+### Training for 100 epochs (unfinished)
 
-For smaller-scale experiments people sometimes train for only 100 epochs. I noticed that I get slightly better results with base learning rate 0.06 instead of 0.03 (this does not hold when training for 1000 epochs). Here are the results of my script with ResNet18 and 100 training epochs:
+For smaller-scale experiments people sometimes train for only 100 epochs. I get slightly better results with base learning rate 0.06 instead of 0.03 (this does not hold when training for 1000 epochs). Here are the results with ResNet18 and 100 training epochs:
 
 |Epochs|LR|Time|Loss/batch|kNN k=5|kNN k=10|lin precomp|lin augm|
 |--|----|----|----|--------|-----------|-------|----|
-|100|0.03|30.3 min|5.92±|90.3±|90.4±|90.9±|91.1±|
-|100|0.06|30.3 min|5.89±|90.3±|90.4±|90.9±|91.1±|
+|100|0.03|27 min|5.92±|78.4±|79.1±|82.4±|81.4±|
+|100|0.06|27 min|5.89±|±|±|±|±|
 
-### Airbench
+### Airbench (unfinished)
 
-In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could have a competition to reach 90.0% kNN accuracy with SSL as quickly as possible. This implementation allows to get there in XX epochs, taking XX hours XX minutes:
+In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could have a competition to reach 90.0% kNN accuracy with self-supervised learning as quickly as possible. This implementation allows to get there in XX epochs, taking XX hours XX minutes:
 
 |Backbone|Batch|Epochs|Time|Loss/batch|kNN k=10|
 |--------|-----|------|----|----|--------|

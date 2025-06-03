@@ -23,14 +23,14 @@ Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU w
 
 Pull requests that improve any of these results are very welcome. I can run suggested PRs on A100.
 
-I prefer `KNeighborsClassifier(n_neighbors=10, metric="cosine")` for evaluation because it is quick, deterministic, and avoid all issues with training a linear readout.
+I prefer `KNeighborsClassifier(n_neighbors=10, metric="cosine")` for evaluation because it is quick, deterministic, and avoids all issues with training a linear readout.
 
 For smaller-scale experiments people sometimes train only for 100 epochs. I noticed that I get slightly better results with base learning rate 0.06 instead of 0.03 (this does not hold when training for 1000 epochs). Here are the results of my script with ResNet18 and 100 training epochs:
 
-|Backbone|Batch|LR|Time|Loss/batch|kNN k=5|kNN k=10|lin precomp|lin augm|
-|--------|-----|--|--------|----|--------|-----------|-------|----|
-|ResNet18|1024 |0.03|30.3 min|5.92±|90.3±|90.4±|90.9±|91.1±|
-|ResNet18|1024 |0.06|30.3 min|5.89±|90.3±|90.4±|90.9±|91.1±|
+|Epochs|LR|Time|Loss/batch|kNN k=5|kNN k=10|lin precomp|lin augm|
+|--|----|----|----|--------|-----------|-------|----|
+|100|0.03|30.3 min|5.92±|90.3±|90.4±|90.9±|91.1±|
+|100|0.06|30.3 min|5.89±|90.3±|90.4±|90.9±|91.1±|
 
 ## Comparison with the literature
 

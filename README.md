@@ -17,9 +17,9 @@ Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU w
 **Training** is done only on the training set --- this is important because doing SimCLR training on training+test sets leads to noticeably higher evaluation results. We use the same set of data augmentations as in the original SimCLR paper. ResNets are modified by replacing the first convolutional layer and removing the first pooling layer, as described in the original SimCLR paper. The projector has output dimensionality 128 and a hidden layer with 1024 neurons. Following the SimSiam paper, we use SGD with momentum 0.9, learning rate 0.03⋅batch_size/256 with cosine annealing, and weight decay 0.0005.
 
 **Evaluation** is done on the test set, using the representation before the projector.
-* kNN classifiers use cosine distance (better results than with Euclidean distance by 2-3 p.p.);
-* `lin precomp` trains a linear readout on precomputed representations. We use Adam (learning rate 0.1) with cosine annealing. Running logistic regression from scikit-learn is theoretically equivalent, but in practice tends to give worse results especially on higher-dimensional ResNet50 representations and is also much slower.
-* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). We use Adam (learning rate 0.1) with cosine annealing. This is much slower because the representations cannot be precomputed.
+* kNN classifiers use cosine distance (Euclidean distance yields worse results by ~3%).
+* `lin precomp` trains a linear readout on precomputed representations. We use Adam (learning rate 0.1) with cosine annealing. Running logistic regression from scikit-learn is theoretically equivalent, but in practice tends to give worse results especially on higher-dimensional ResNet50 representations, and is also much slower.
+* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). We use Adam (learning rate 0.1) with cosine annealing. This is much slower than `lin precomp` because the representations cannot be precomputed, but tends to give slightly better results.
 
 Pull requests that improve any of these results are very welcome. I can run suggested PRs on A100.
 

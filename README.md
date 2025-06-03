@@ -31,12 +31,14 @@ For smaller-scale experiments people sometimes train for only 100 epochs. I get 
 
 |Epochs|LR|Time|Loss/batch|kNN k=5|kNN k=10|lin precomp|lin augm|
 |--|----|----|----|--------|-----------|-------|----|
-|100|0.03|27 min|5.92±|78.4±|79.1±|82.4±|81.4±|
+|100|0.03|27 min|5.92±.00|78.4±.1|79.0±.1|82.5±.1|81.3±.2|
 |100|0.06|27 min|5.89±|±|±|±|±|
+
+(It seems my linear training with augmentations is failing here, not sure why.)
 
 ### Airbench (unfinished)
 
-In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could have a competition to reach 90.0% kNN accuracy with self-supervised learning as quickly as possible. This implementation allows to get there in XX epochs, taking XX hours XX minutes:
+In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could have a competition to reach 90.0% kNN accuracy with self-supervised learning as quickly (wall clock on A100) as possible. Any network architecture, any training approach. This implementation allows to get there in XX epochs, taking XX hours XX minutes:
 
 |Backbone|Batch|Epochs|Time|Loss/batch|kNN k=10|
 |--------|-----|------|----|----|--------|

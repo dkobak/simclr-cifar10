@@ -215,15 +215,25 @@ with torch.no_grad():
     X_test, y_test, Z_test = dataset_to_X_y(cifar10_test)
 
 for k in [1, 5, 10]:
-    knn = KNeighborsClassifier(n_neighbors=k, metric="cosine")
-    knn.fit(X_train, y_train)
-    print(f"kNN accuracy (cosine, k={k}): {knn.score(X_test, y_test):.4f}", flush=True)
+    for metric in ["euclidean", "cosine"]:
+        knn = KNeighborsClassifier(n_neighbors=k, metric=metric)
+        knn.fit(X_train, y_train)
+        print(
+            f"kNN accuracy ({metric}, k={k}): {knn.score(X_test, y_test):.4f}",
+            flush=True,
+        )
 
-lin = LogisticRegression(penalty=None, solver="saga") # better results than defaults
+# These params give better results than defaults (ridge penalty and lbfgs solver),
+# but still often give convergence warnings, even when increasing max_iter.
+# Training on GPU as we do below is much faster and tends to give better results.
+lin = LogisticRegression(penalty=None, solver="saga")
 lin.fit(X_train, y_train)
-print(f"Linear accuracy (saga/no-penalty): {lin.score(X_test, y_test)}", flush=True)
+print(f"Linear accuracy (sklearn): {lin.score(X_test, y_test)}", flush=True)
 
-################# LINEAR EVALUATION FROM THE ERMOLOV REPO ###############
+########### LINEAR EVALUATION ON PRECOMPUTED REPRESENTATIONS ##########
+
+N_EPOCHS = 500
+ADAM_LR = 0.01
 
 X_train = torch.tensor(X_train, device=device)
 X_test = torch.tensor(X_test, device=device)
@@ -234,26 +244,27 @@ classifier = nn.Linear(X_train.shape[1], 10)
 classifier.to(device)
 classifier.train()
 
-optimizer = Adam(classifier.parameters(), lr=0.01)
-scheduler = CosineAnnealingLR(optimizer, T_max=500)
+optimizer = Adam(classifier.parameters(), lr=ADAM_LR)
+scheduler = CosineAnnealingLR(optimizer, T_max=N_EPOCHS)
 
-for epoch in range(500):
-    perm = torch.randperm(len(X_train)).view(-1, 1000)
-    for idx in perm:
+for epoch in range(N_EPOCHS):
+    batches = torch.randperm(len(X_train)).view(-1, 1000)
+    for idx in batches:
         optimizer.zero_grad()
-        loss = F.cross_entropy(classifier(X_train[idx]), y_train[idx])
+        logits = classifier(X_train[idx])
+        loss = F.cross_entropy(logits, y_train[idx])
         loss.backward()
         optimizer.step()
     scheduler.step()
 
 classifier.eval()
 with torch.no_grad():
-    y_pred = classifier(X_test)
+    yhat = classifier(X_test)
 
-acc = (y_pred.argmax(axis=1) == y_test).cpu().numpy().mean()
+acc = (yhat.argmax(axis=1) == y_test).cpu().numpy().mean()
 print(f"Linear accuracy (Adam on precomputed representations): {acc}", flush=True)
 
-################# LINEAR EVALUATION WITH AUGM ####################
+############### LINEAR EVALUATION WITH AUGMENTATIONS ##################
 
 N_EPOCHS = 100
 BASE_LR = 1

@@ -18,8 +18,8 @@ Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU w
 
 **Evaluation** is done on the test set, using the representation before the projector.
 * kNN classifiers use cosine distance (Euclidean distance yields worse results by ~3%).
-* `lin precomp` trains a linear readout on precomputed representations. We use Adam (learning rate 0.1) with cosine annealing. Running logistic regression from scikit-learn is theoretically equivalent, but in practice tends to give worse results especially on higher-dimensional ResNet50 representations, and is also much slower.
-* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). We use Adam (learning rate 0.1) with cosine annealing. This is much slower than `lin precomp` because the representations cannot be precomputed, but tends to give slightly better results.
+* `lin precomp` trains a linear readout on precomputed representations. We use Adam (learning rate 0.1 for 100 epochs) with cosine annealing. Running logistic regression from scikit-learn is theoretically equivalent, but in practice tends to give worse results especially on higher-dimensional ResNet50 representations, and is also much slower.
+* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). We use Adam (same parameters) with cosine annealing. This is much slower than `lin precomp` because the representations cannot be precomputed, but tends to give slightly better results.
 
 Pull requests that improve any of these results are very welcome. I can run suggested PRs on A100.
 

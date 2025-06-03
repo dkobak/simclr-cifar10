@@ -32,6 +32,12 @@ For smaller-scale experiments people sometimes train only for 100 epochs. I noti
 |100|0.03|30.3 min|5.92±|90.3±|90.4±|90.9±|91.1±|
 |100|0.06|30.3 min|5.89±|90.3±|90.4±|90.9±|91.1±|
 
+In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could have a competition to reach 90.0% kNN accuracy as quickly as possible. This implementation allows to get there in XX epochs, taking XX hours XX minutes:
+
+|Backbone|Batch|Epochs|Time|Loss/batch|kNN k=10|
+|--------|-----|------|----|----|--------|
+|ResNet18|1024 |XX|XX|±.00|±.1|
+
 ## Comparison with the literature
 
 #### ResNet18

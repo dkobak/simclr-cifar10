@@ -9,7 +9,7 @@ The code is optimized for readability and hackability. PRs welcome (see below).
 |Backbone|Batch|Sec/epoch|Loss/batch|kNN k=5|kNN k=10|lin precomp|lin augm|
 |--------|-----|----------|----|--------|-----------|-------|----|
 |ResNet18|1024 |18.2 s|5.77±.00|90.3±.1|90.4±.1|90.9±.1|91.1±.1|
-|ResNet34|1024 |22.2 s|5.75±.00|91.1±.1|91.2±.1|91.3±.2|91.8±.2|
+|ResNet34|1024 |22.2 s|5.75±.00|91.1±.1|91.2±.1|91.3±.1|91.8±.1|
 |ResNet50|512  |38.5 s|5.05±.00|91.5±.1|91.6±.1|93.1±.1|93.2±.1|
 
 Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU workers (note that the number of available workers can strongly affect the runtime). I used batch size 512 for ResNet50 because batch size 1024 did not fit into memory (note that the loss values cannot be compared across different batch sizes).

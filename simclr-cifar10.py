@@ -232,8 +232,8 @@ print(f"Linear accuracy (sklearn): {lin.score(X_test, y_test)}", flush=True)
 
 ########### LINEAR EVALUATION ON PRECOMPUTED REPRESENTATIONS ##########
 
-N_EPOCHS = 500
-ADAM_LR = 0.01
+N_EPOCHS = 100
+ADAM_LR = 0.1
 
 X_train = torch.tensor(X_train, device=device)
 X_test = torch.tensor(X_test, device=device)
@@ -266,11 +266,6 @@ print(f"Linear accuracy (Adam on precomputed representations): {acc}", flush=Tru
 
 ############### LINEAR EVALUATION WITH AUGMENTATIONS ##################
 
-N_EPOCHS = 100
-BASE_LR = 1
-WEIGHT_DECAY = 0.0
-NESTEROV = True
-
 transforms_classifier = transforms.Compose(
     [
         transforms.RandomResizedCrop(size=32, scale=(CROP_LOW_SCALE, 1)),
@@ -293,14 +288,7 @@ cifar10_loader_classifier = DataLoader(
 classifier = nn.Linear(model.backbone_output_dim, 10)
 model.backbone.requires_grad = False
 
-optimizer = SGD(
-    classifier.parameters(),
-    lr=BASE_LR * BATCH_SIZE / 256,
-    momentum=MOMENTUM,
-    weight_decay=WEIGHT_DECAY,
-    nesterov=NESTEROV,
-)
-
+optimizer = Adam(classifier.parameters(), lr=ADAM_LR)
 scheduler = CosineAnnealingLR(optimizer, T_max=N_EPOCHS)
 
 classifier.to(device)
@@ -363,4 +351,4 @@ with torch.no_grad():
     y = np.hstack(y)
 
 acc = (yhat.argmax(axis=1) == y).mean()
-print(f"Linear accuracy (SGD trained with augmentations): {acc}", flush=True)
+print(f"Linear accuracy (trained with augmentations): {acc}", flush=True)

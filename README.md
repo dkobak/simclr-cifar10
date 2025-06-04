@@ -9,8 +9,8 @@ The code is optimized for readability and hackability. PRs welcome (see below).
 |Backbone|Batch|Sec/epoch|Loss/batch|kNN k=5|kNN k=10|lin precomp|lin augm|
 |--------|-----|----------|----|--------|-----------|-------|----|
 |ResNet18|1024 |~15 s|5.77±.00|90.3±.1|90.4±.1|90.7±.1|90.9±.1|
-|ResNet34|1024 |22.2 s|5.75±.00|91.1±.1|91.2±.1|91.3±.1|91.8±.1|
-|ResNet50|512  |38.5 s|5.05±.00|91.5±.1|91.6±.1|93.1±.1|93.2±.1|
+|ResNet34|1024 |~22 s|5.75±.00|91.1±.1|91.2±.1|91.3±.1|91.8±.1|
+|ResNet50|512  |~38 s|5.05±.00|91.5±.1|91.6±.1|93.0±.1|93.2±.1|
 
 Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU workers (note that the number of available workers can strongly affect the runtime). I used batch size 512 for ResNet50 because batch size 1024 did not fit into memory (note that the loss values cannot be compared across different batch sizes).
 
@@ -18,8 +18,12 @@ Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU w
 
 **Evaluation** is done on the test set, using the representation before the projector.
 * kNN classifiers use cosine distance (Euclidean distance yields worse results by ~3%).
-* `lin precomp` trains a linear readout on precomputed representations. We use Adam (learning rate 0.1 for 100 epochs) with cosine annealing. Running logistic regression from scikit-learn is theoretically equivalent, but in practice tends to give worse results especially on higher-dimensional ResNet50 representations, and is also much slower.
-* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). We use Adam (same parameters) with cosine annealing. This is much slower than `lin precomp` because the representations cannot be precomputed, but tends to give slightly better results.
+* `lin precomp` trains a linear readout on precomputed representations.
+  * For ResNet18 and ResNet34 I got the best results using logistic regression from `scikit-learn`.
+  * For ResNet34 I got the best results training a linear readout layer using Adam (learning rate 0.1 for 100 epochs) with cosine annealing. 
+* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). This is much slower than `lin precomp` because the representations cannot be precomputed, but tends to give slightly better results.
+  * For ResNet34 and ResNet34 I got the best results using SGD (momentum 0.9 and base learning rate 1), with cosine annealing.  
+  * For ResNet50 I got the best results using Adam (learning rate 0.1 for 100 epochs) with cosine annealing.
 
 Pull requests that improve any of these results are very welcome. I can run suggested PRs on A100.
 
@@ -35,9 +39,9 @@ For smaller-scale experiments people sometimes train for only 100 epochs. I get 
 
 (It seems my linear training with augmentations is failing here, not sure why.)
 
-### Airbench (unfinished)
+### Airbench
 
-In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could have a competition to reach 90.0% kNN accuracy with self-supervised learning as quickly (wall clock on A100) as possible. Any network architecture, any training approach. This implementation allows to get there in XX epochs, taking XX hours XX minutes:
+In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could have a competition to reach 90.0% kNN accuracy with self-supervised learning as quickly (wall clock on A100) as possible. Any network architecture, any training approach. This implementation allows to get there in 700 epochs, taking XX hours XX minutes:
 
 |Backbone|Batch|Epochs|Time|Loss/batch|kNN k=10|
 |--------|-----|------|----|----|--------|

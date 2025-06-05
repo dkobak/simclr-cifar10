@@ -49,7 +49,7 @@ In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could hav
 
 #### ResNet18
 
-* Chen & He (SimSiam paper https://arxiv.org/abs/2011.10566) report **91.1** (Figure D1). They use SGD with momentum, and we borrow their hyperparameters. Here is an unofficial repository implementing their methods: https://github.com/PatrickHua/SimSiam. It uses linear evaluation trained with data augmentations. Rusak et al. (https://arxiv.org/abs/2407.00143) report **90.9** following the SimSiam paper hyperparameters (Table 1).
+* Chen & He (SimSiam paper https://arxiv.org/abs/2011.10566) report **91.1** linear accuracy (Figure D1). They use SGD with momentum, and we borrow their hyperparameters. Here is an unofficial repository implementing their methods: https://github.com/PatrickHua/SimSiam. It uses linear evaluation trained with data augmentations. Rusak et al. (https://arxiv.org/abs/2407.00143) report **90.9** following the SimSiam paper hyperparameters (Table 1).
 * Ermolov et al. (W-MSE paper https://arxiv.org/abs/2007.06346) report **91.8** linear accuracy (Table 1). They use Adam on frozen representations for evaluation. They also use Adam for SimCLR training, which I haven not see anywhere else. I tried using Adam with their hyperparameters and scheduler, and I got much worse results. I do not know why. They seem to be using a batch norm layer after the projection head; I do not know if it matters. Their repository is here: https://github.com/htdt/self-supervised.
 * Here is a repository https://github.com/p3i0t/SimCLR-CIFAR10 that claims 92.9 accuracy. It uses SGD with suboptimal hyperparameters (base learning rate 0.36, momentum 1e-6), employs some weird implementation choices (like clipping cosine similarity to be non-negative, or accidentally ending up with base learning rate 0.36=0.6*0.6), and does not properly freeze the backbone during evaluation. I do not trust the results there.
 
@@ -59,4 +59,4 @@ In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could hav
 
 #### ResNet50
 
-* Chen et al. (SimCLR paper https://arxiv.org/abs/2002.05709) report **94.0** (Appendix B.9). They used a TensorFlow implementation and LARS for optimization. AFAIK nobody has been able to reproduce that number.
+* Chen et al. (SimCLR paper https://arxiv.org/abs/2002.05709) report **94.0** linear accuracy (Appendix B.9). They used a TensorFlow implementation and LARS for optimization. AFAIK nobody has been able to reproduce that number.

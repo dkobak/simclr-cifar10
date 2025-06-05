@@ -22,7 +22,7 @@ Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU w
   * For ResNet18 and ResNet34 (512-dim representations) I got the best results using logistic regression from `scikit-learn`.
   * For ResNet50 (2048-dim representations) I got the best results training a linear readout layer using Adam (learning rate 0.1 for 100 epochs) with cosine annealing. 
 * `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). This is much slower than `lin precomp` because the representations cannot be precomputed, but tends to give slightly better results.
-  * For ResNet34 and ResNet34 I got the best results using SGD (momentum 0.9 and base learning rate 1), with cosine annealing.  
+  * For ResNet34 and ResNet34 I got the best results using SGD (momentum 0.9 and base learning rate 1 for 100 epochs) with cosine annealing.  
   * For ResNet50 I got the best results using Adam (learning rate 0.1 for 100 epochs) with cosine annealing.
 
 Pull requests that improve any of these results are very welcome. I can run suggested PRs on A100.

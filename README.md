@@ -29,9 +29,9 @@ Pull requests that improve any of these results are very welcome. I can run sugg
 
 Personally, I prefer `KNeighborsClassifier(n_neighbors=10, metric="cosine")` for evaluation because it is quick, deterministic, and avoids all issues with training a linear readout.
 
-### Training for 100 epochs
+### Training ResNet18 for 100 epochs
 
-For smaller-scale experiments people sometimes train for only 100 epochs. Here I get better results with base learning rate 0.06 instead of 0.03 (this does not hold when training for 1000 epochs):
+For smaller-scale experiments people sometimes train for only 100 epochs. Here I get better results with base learning rate 0.06 instead of 0.03 (this does not hold when training for 1000 epochs), at least with ResNet18 bachbone:
 
 |Epochs|LR|Time|Loss/batch|kNN k=5|kNN k=10|lin precomp|lin augm|
 |--|----|----|----|--------|-----------|-------|----|

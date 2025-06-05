@@ -31,21 +31,19 @@ Personally, I prefer `KNeighborsClassifier(n_neighbors=10, metric="cosine")` for
 
 ### Training for 100 epochs
 
-For smaller-scale experiments people sometimes train for only 100 epochs. I get better results with base learning rate 0.06 instead of 0.03 (this does not hold when training for 1000 epochs):
+For smaller-scale experiments people sometimes train for only 100 epochs. Here I get better results with base learning rate 0.06 instead of 0.03 (this does not hold when training for 1000 epochs):
 
 |Epochs|LR|Time|Loss/batch|kNN k=5|kNN k=10|lin precomp|lin augm|
 |--|----|----|----|--------|-----------|-------|----|
-|100|0.06|27 min|5.89±.00|81.1±.2|81.8±.2|84.7±.2|84.0±.2|
-
-(It seems my linear training with augmentations is failing here, not sure why.)
+|100|0.06|27 min|5.89±.00|81.1±.2|81.8±.2|84.2±.2|83.3±.2|
 
 ### Airbench
 
-In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could have a competition to reach 90.0% kNN accuracy with self-supervised learning as quickly (wall clock on A100) as possible. Any network architecture, any training approach. This implementation allows to get there in 700 epochs, taking XX hours XX minutes:
+In the spirit of https://github.com/KellerJordan/cifar10-airbench, one could have a competition to reach 90.0% kNN accuracy with self-supervised learning as quickly (wall clock on A100) as possible. Any network architecture, any training approach. This implementation allows to get there in 700 epochs, taking ~3 hours:
 
 |Backbone|Batch|Epochs|Time|Loss/batch|kNN k=10|
 |--------|-----|------|----|----|--------|
-|ResNet18|1024 |XX|XX|±.00|±.1|
+|ResNet18|1024 |700| 2h 58 min|5.78±.00|90.0±.2|
 
 ## Comparison with the literature
 

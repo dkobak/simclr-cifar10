@@ -28,7 +28,7 @@ PROJECTOR_HIDDEN_SIZE = 1024
 CROP_LOW_SCALE = 0.2
 NESTEROV = False
 PRINT_EVERY_EPOCHS = 100
-MODEL_FILENAME = "simclr-resnet.pt"
+MODEL_FILENAME = "simclr-{BACKBONE}-{np.random.randint(10000):04}.pt"
 
 ###################### DATA LOADER #########################
 
@@ -113,9 +113,9 @@ def infoNCE(features, temperature=0.5):
     return F.cross_entropy(cos_xx, targets)
 
 backbones = {
-   "resnet18": resnet18,
-   "resnet34": resnet34,
-   "resnet50": resnet50,
+   "resnet18": resnet18,    # backbone_output_dim = 512
+   "resnet34": resnet34,    # backbone_output_dim = 512
+   "resnet50": resnet50,    # backbone_output_dim = 2048
 }
 
 model = ResNetwithProjector(backbones[BACKBONE])
@@ -221,9 +221,8 @@ for k in [1, 5, 10]:
             flush=True,
         )
 
-# These params give better results than defaults (ridge penalty and lbfgs solver),
-# but still often give convergence warnings, even when increasing max_iter.
-# Training on GPU as we do below is much faster and tends to give better results.
+# These params tend to give better results than defaults (ridge penalty and lbfgs solver).
+# One often gets convergence warnings, but those can be ignored.
 lin = LogisticRegression(penalty=None, solver="saga")
 lin.fit(X_train, y_train)
 print(f"Linear accuracy (sklearn): {lin.score(X_test, y_test)}", flush=True)
@@ -231,7 +230,7 @@ print(f"Linear accuracy (sklearn): {lin.score(X_test, y_test)}", flush=True)
 ########### LINEAR EVALUATION ON PRECOMPUTED REPRESENTATIONS ##########
 
 N_EPOCHS = 100
-ADAM_LR = 0.1    # lr=0.01 requires n_epochs=500 to get similar results
+ADAM_LR = 0.1    # lr=0.01 and n_epochs=500 works similarly
 
 X_train = torch.tensor(X_train, device=device)
 X_test = torch.tensor(X_test, device=device)
@@ -264,6 +263,11 @@ print(f"Linear accuracy (Adam on precomputed representations): {acc}", flush=Tru
 
 ############### LINEAR EVALUATION WITH AUGMENTATIONS ##################
 
+N_EPOCHS = 100
+ADAM_LR = 0.1
+SGD_BASE_LR = 1
+NESTEROV = True
+
 transforms_classifier = transforms.Compose(
     [
         transforms.RandomResizedCrop(size=32, scale=(CROP_LOW_SCALE, 1)),
@@ -287,7 +291,16 @@ classifier = nn.Linear(model.backbone_output_dim, 10)
 for param in model.backbone.parameters():
     param.requires_grad = False
 
-optimizer = Adam(classifier.parameters(), lr=ADAM_LR)
+if BACKBONE == "resnet50":
+    optimizer = Adam(classifier.parameters(), lr=ADAM_LR)
+else:
+    optimizer = SGD(
+        classifier.parameters(),
+        lr=SGD_BASE_LR * BATCH_SIZE / 256,
+        momentum=MOMENTUM,
+        nesterov=NESTEROV,
+    )
+
 scheduler = CosineAnnealingLR(optimizer, T_max=N_EPOCHS)
 
 classifier.to(device)

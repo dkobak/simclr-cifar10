@@ -25,6 +25,7 @@ BASE_LR = 0.03
 WEIGHT_DECAY = 5e-4 
 MOMENTUM = 0.9
 PROJECTOR_HIDDEN_SIZE = 1024
+PROJECTOR_OUTPUT_SIZE = 128
 CROP_LOW_SCALE = 0.2
 NESTEROV = False
 PRINT_EVERY_EPOCHS = 100
@@ -91,7 +92,7 @@ class ResNetwithProjector(nn.Module):
         self.projector = nn.Sequential(
             nn.Linear(self.backbone_output_dim, PROJECTOR_HIDDEN_SIZE), 
             nn.ReLU(), 
-            nn.Linear(PROJECTOR_HIDDEN_SIZE, 128),
+            nn.Linear(PROJECTOR_HIDDEN_SIZE, PROJECTOR_OUTPUT_SIZE),
         )
 
     def forward(self, x):

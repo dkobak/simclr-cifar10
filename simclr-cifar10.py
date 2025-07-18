@@ -72,6 +72,7 @@ cifar10_loader_ssl = DataLoader(
     batch_size=BATCH_SIZE,
     shuffle=True,
     num_workers=N_CPU_WORKERS,
+    pin_memory=True,
 )
 
 ###################### NETWORK ARCHITECTURE #########################
@@ -145,8 +146,8 @@ for epoch in range(N_EPOCHS):
 
     for batch_idx, batch in enumerate(cifar10_loader_ssl):
         view1, view2, _ = batch
-        view1 = view1.to(device)
-        view2 = view2.to(device)
+        view1 = view1.to(device, non_blocking=True)
+        view2 = view2.to(device, non_blocking=True)
 
         optimizer.zero_grad()
 

@@ -244,7 +244,7 @@ print(f"Linear accuracy (sklearn): {lin.score(X_test, y_test)}", flush=True)
 
 N_EPOCHS = 500
 ADAM_LR = 0.01
-ADAM_WD = 5e-6
+ADAM_WD = 5e-6   # important
 
 X_train = torch.tensor(X_train, device=device)
 X_test = torch.tensor(X_test, device=device)

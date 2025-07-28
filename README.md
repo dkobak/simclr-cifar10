@@ -4,7 +4,7 @@ This is a barebones PyTorch implementation of [SimCLR](https://arxiv.org/abs/200
 ```
 python simclr-cifar10.py
 ```
-The code is optimized for readability and hackability. PRs welcome.
+The code is optimized for readability and hackability. Results are SOTA for SimCLR on CIFAR10. PRs welcome.
 
 |Backbone|Batch|Sec/epoch|Loss/batch|kNN k=10|lin precomp|lin augm|
 |--------|-----|----------|----|-----------|-------|----|

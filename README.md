@@ -31,7 +31,7 @@ Personally, I prefer `KNeighborsClassifier(n_neighbors=10, metric="cosine")` for
 
 ### Training ResNet18 for 100 epochs
 
-For smaller-scale experiments people sometimes train for only 100 epochs. Here I get better results with base learning rate 0.06 instead of 0.03 (this does not hold when training for 1000 epochs), at least with ResNet18 bachbone:
+For smaller-scale experiments people sometimes train ResNet18 for only 100 epochs. Here I get better results with base learning rate 0.06 instead of 0.03 (this does not hold when training for 1000 epochs):
 
 |Epochs|LR|Time|Loss/batch|kNN k=10|lin precomp|lin augm|
 |--|----|----|----|--------|-------|----|
@@ -39,7 +39,7 @@ For smaller-scale experiments people sometimes train for only 100 epochs. Here I
 
 It is unclear why `lin precomp` works better than `lin augm` here.
 
-### Airbench
+### Training till kNN accuracy 90.0%
 
 In the spirit of https://github.com/KellerJordan/cifar10-airbench, one can have a competition to reach 90.0% kNN accuracy with self-supervised learning as quickly (wall clock on A100) as possible. Any network architecture, any training approach. This implementation allows to get there in 500 epochs, taking 1 hour 39 minutes:
 

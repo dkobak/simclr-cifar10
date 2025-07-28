@@ -30,7 +30,7 @@ CROP_LOW_SCALE = 0.2
 GRAYSCALE_PROB = 0.1
 NESTEROV = False
 PRINT_EVERY_EPOCHS = 100
-MODEL_FILENAME = "simclr-{BACKBONE}-{np.random.randint(10000):04}.pt"
+MODEL_FILENAME = f"simclr-{BACKBONE}-{np.random.randint(10000):04}.pt"
 
 ###################### DATA LOADER #########################
 

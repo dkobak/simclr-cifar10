@@ -280,8 +280,6 @@ print(f"Linear accuracy (Adam on precomputed representations): {acc}", flush=Tru
 N_EPOCHS = 100
 ADAM_LR = 0.1
 ADAM_WD = 5e-6
-SGD_BASE_LR = 1
-NESTEROV = True
 
 transforms_classifier = transforms.Compose(
     [
@@ -306,16 +304,7 @@ classifier = nn.Linear(model.backbone_output_dim, 10)
 for param in model.backbone.parameters():
     param.requires_grad = False
 
-if BACKBONE == "resnet50":
-    optimizer = Adam(classifier.parameters(), lr=ADAM_LR, weight_decay=ADAM_WD)
-else:
-    optimizer = SGD(
-        classifier.parameters(),
-        lr=SGD_BASE_LR * BATCH_SIZE / 256,
-        momentum=MOMENTUM,
-        nesterov=NESTEROV,
-    )
-
+optimizer = Adam(classifier.parameters(), lr=ADAM_LR, weight_decay=ADAM_WD)
 scheduler = CosineAnnealingLR(optimizer, T_max=N_EPOCHS)
 
 classifier.to(device)

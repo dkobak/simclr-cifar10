@@ -8,7 +8,7 @@ The code is optimized for readability and hackability. PRs welcome.
 
 |Backbone|Batch|Sec/epoch|Loss/batch|kNN k=10|lin precomp|lin augm|
 |--------|-----|----------|----|-----------|-------|----|
-|ResNet18|512  |11.9 s|5.07±.00|91.2±.2|91.2±.1|91.8±.1|
+|ResNet18|512  |11.9 s|5.07±.00|91.4±.0|91.7±.1|91.9±.1|
 |ResNet34|512  |19.6 s|5.05±.00|92.1±.1|92.0±.3|92.7±.0|
 |ResNet50|512  |36.9 s|5.05±.00|92.2±.0|93.4±.0|93.7±.1|
 
@@ -34,9 +34,9 @@ For smaller-scale experiments people sometimes train ResNet18 for only 100 epoch
 
 |Epochs|LR|Time|Loss/batch|kNN k=10|lin precomp|lin augm|
 |--|----|----|----|--------|-------|----|
-|100|0.06|20 min|5.18±.01|82.9±.1|85.4±.2|84.7±.3|
+|100|0.06|20 min|5.18±.01|83.2±.2|85.6±.2|85.0±.3|
 
-It is unclear why `lin precomp` works better than `lin augm` here.
+I am not sure why `lin precomp` works better than `lin augm` here.
 
 ### Training till kNN accuracy 90.0%
 
@@ -44,15 +44,15 @@ In the spirit of https://github.com/KellerJordan/cifar10-airbench, one can have 
 
 |Backbone|Batch|Epochs|Time|Loss/batch|kNN k=10|
 |--------|-----|------|----|----|--------|
-|ResNet18|512 |500| 1h 39 min|5.10±.00|90.0±.3|
+|ResNet18|512 |500| 1h 39 min|5.10±.00|90.3±.3|
 
 ## Comparison with the literature
 
 #### ResNet18
 
 * Chen & He (SimSiam paper https://arxiv.org/abs/2011.10566) report 91.1 linear accuracy (Figure D1). They use SGD with momentum, and we borrow their hyperparameters. Here is an unofficial repository implementing their methods: https://github.com/PatrickHua/SimSiam. It uses linear evaluation trained with data augmentations. Rusak et al. (https://arxiv.org/abs/2407.00143) report 90.9 following the SimSiam paper hyperparameters (Table 1). We get better results (91.8 with `lin augm`) mainly due to grayscaling probability set to 0.1 (with 0.2 our results are similar to Chen & He and Rusak et al.).
-* Ermolov et al. (W-MSE paper https://arxiv.org/abs/2007.06346) report 91.8 linear accuracy on frozen representations (Table 1), and I confirmed that using their repo: https://github.com/htdt/self-supervised. They use Adam on frozen representations for evaluation and they also use Adam for SimCLR training. I added kNN evaluation to their code and got 90.5, so their kNN results are worse than mine and similar to what I get with Adam; why their frozen linear accuracy is higher than my `lin precomp`, I could not figure out. Note that they use two batch norm layers in the projection head (this seems to have only a very minor effect though).
-* Here is a repository https://github.com/p3i0t/SimCLR-CIFAR10 that claims 92.9 accuracy. It uses SGD with suboptimal hyperparameters (base learning rate 0.36, momentum 1e-6), employs some weird implementation choices (like clipping cosine similarity to be non-negative, or accidentally ending up with base learning rate 0.36=0.6*0.6), and does not properly freeze the backbone during evaluation. So these claimed results are invalid.
+* Ermolov et al. (W-MSE paper https://arxiv.org/abs/2007.06346) report 91.8 linear accuracy on frozen representations (Table 1), and I confirmed that using their repo: https://github.com/htdt/self-supervised. This matches my results (91.7 with `lin precomp`). They use Adam on frozen representations for evaluation and also use Adam for SimCLR training. I added kNN evaluation to their code and got 90.5, so their kNN results are worse than mine (91.4) and similar to what I get with Adam. Note that they use two batch norm layers in the projection head (this seems to have only a very minor effect though). They use grayscaling probability 0.1.
+* Here is a repository https://github.com/p3i0t/SimCLR-CIFAR10 that claims 92.9 accuracy. It uses SGD with suboptimal hyperparameters (base learning rate 0.36, momentum 1e-6), employs some weird implementation choices (like clipping cosine similarity to be non-negative, or accidentally ending up with base learning rate 0.36=0.6*0.6), and does not properly freeze the backbone during evaluation. So these results are invalid.
 
 #### ResNet34
 

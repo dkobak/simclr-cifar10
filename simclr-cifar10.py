@@ -28,7 +28,6 @@ PROJECTOR_HIDDEN_SIZE = 1024
 PROJECTOR_OUTPUT_SIZE = 128
 CROP_LOW_SCALE = 0.2
 GRAYSCALE_PROB = 0.1   # important
-NESTEROV = False
 PRINT_EVERY_EPOCHS = 10
 MODEL_FILENAME = f"simclr-{BACKBONE}-{np.random.randint(10000):04}.pt"
 
@@ -127,12 +126,11 @@ optimizer = SGD(
     lr=BASE_LR * BATCH_SIZE / 256,
     momentum=MOMENTUM,
     weight_decay=WEIGHT_DECAY,
-    nesterov=NESTEROV,
 )
 
 scheduler = CosineAnnealingLR(optimizer, T_max=N_EPOCHS)
 
-# # Adam also works but requires 1e-6 weight decay and warmup
+# # Adam works almost as well but requires 1e-6 weight decay and warmup
 # optimizer = Adam(model.parameters(), lr=3e-3, weight_decay=1e-6)
 # 
 # scheduler = SequentialLR(

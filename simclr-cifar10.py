@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.optim import SGD, Adam
-from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.optim.lr_scheduler import CosineAnnealingLR, LinearLR, SequentialLR
 from torch.utils.data import Dataset, DataLoader
 
 from torchvision.datasets import CIFAR10
@@ -27,6 +27,7 @@ MOMENTUM = 0.9
 PROJECTOR_HIDDEN_SIZE = 1024
 PROJECTOR_OUTPUT_SIZE = 128
 CROP_LOW_SCALE = 0.2
+GRAYSCALE_PROB = 0.1
 NESTEROV = False
 PRINT_EVERY_EPOCHS = 100
 MODEL_FILENAME = "simclr-{BACKBONE}-{np.random.randint(10000):04}.pt"
@@ -48,27 +49,26 @@ transforms_ssl = transforms.Compose(
         transforms.RandomApply(
             [transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)], p=0.8
         ),
-        transforms.RandomGrayscale(p=0.2),
+        transforms.RandomGrayscale(p=GRAYSCALE_PROB),
+        transforms.ToTensor(),
     ]
 )
 
 
-class AugmentedDataset(Dataset):
-    def __init__(self, dataset: Dataset, transform):
-        self.dataset = dataset
+class PairedTransform:
+    def __init__(self, transform):
         self.transform = transform
 
-    def __len__(self):
-        return len(self.dataset)
+    def __call__(self, x):
+        return (self.transform(x), self.transform(x))
 
-    def __getitem__(self, i):
-        item, label = self.dataset[i]
 
-        return self.transform(item), self.transform(item), label
+paired_ssl_transforms = PairedTransform(transforms_ssl)
 
+cifar10_train_ssl = CIFAR10(root=".", train=True, transform=paired_ssl_transforms)
 
 cifar10_loader_ssl = DataLoader(
-    AugmentedDataset(cifar10_train, transforms_ssl),
+    cifar10_train_ssl,
     batch_size=BATCH_SIZE,
     shuffle=True,
     num_workers=N_CPU_WORKERS,
@@ -132,6 +132,18 @@ optimizer = SGD(
 
 scheduler = CosineAnnealingLR(optimizer, T_max=N_EPOCHS)
 
+# # Adam also works but requires 1e-6 weight decay and warmup
+# optimizer = Adam(model.parameters(), lr=3e-3, weight_decay=1e-6)
+# 
+# scheduler = SequentialLR(
+#     optimizer,
+#     schedulers=[
+#         LinearLR(optimizer, start_factor=0.1, total_iters=10),
+#         CosineAnnealingLR(optimizer, T_max=N_EPOCHS - 10),
+#     ],
+#     milestones=[10],
+# )
+
 ###################### TRAINING LOOP #########################
 
 device = "cuda"
@@ -145,14 +157,13 @@ for epoch in range(N_EPOCHS):
     start_time = time.time()
 
     for batch_idx, batch in enumerate(cifar10_loader_ssl):
-        view1, view2, _ = batch
-        view1 = view1.to(device, non_blocking=True)
-        view2 = view2.to(device, non_blocking=True)
+        views, _ = batch
+        views = [view.to(device, non_blocking=True) for view in views]
 
         optimizer.zero_grad()
 
-        _, z1 = model(view1)
-        _, z2 = model(view2)
+        _, z1 = model(views[0])
+        _, z2 = model(views[1])
         loss = infoNCE(torch.cat((z1, z2)))
         epoch_loss += loss.item()
 
@@ -231,8 +242,8 @@ print(f"Linear accuracy (sklearn): {lin.score(X_test, y_test)}", flush=True)
 
 ########### LINEAR EVALUATION ON PRECOMPUTED REPRESENTATIONS ##########
 
-N_EPOCHS = 100
-ADAM_LR = 0.1    # lr=0.01 and n_epochs=500 works similarly
+N_EPOCHS = 500
+ADAM_LR = 0.01    # lr=0.1 and n_epochs=100 works similarly
 
 X_train = torch.tensor(X_train, device=device)
 X_test = torch.tensor(X_test, device=device)

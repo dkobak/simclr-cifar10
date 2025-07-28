@@ -12,12 +12,12 @@ The code is optimized for readability and hackability. PRs welcome.
 |ResNet34|512  |19.6 s|5.05±.00|92.1±.1|92.0±.3|92.7±.0|
 |ResNet50|512  |36.9 s|5.05±.00|92.2±.0|93.4±.0|93.7±.1|
 
-Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU workers (the number of available workers can strongly affect the runtime). I used batch size 512 because batch size 1024 did not fit into memory for ResNet50 and I wanted to make the loss values comparable across architectures. Larger batch sizes did not improve the performance on ResNet18, so batch size 512 is sufficient.
+Results after 1000 epochs. Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU workers (the number of available workers can strongly affect the runtime). I used batch size 512 because batch size 1024 did not fit into memory for ResNet50 and I wanted to make the loss values comparable across architectures. Larger batch sizes did not improve the performance on ResNet18, so batch size 512 is sufficient.
 
 **Training** is done only on the training set --- this is important because doing SimCLR training on training+test sets leads to noticeably higher evaluation results.
 * I use the same set of data augmentations as in the [original SimCLR paper](https://arxiv.org/abs/2002.05709), but set the grayscale probability to 0.1 following [Ermolov et al. 2020](https://arxiv.org/abs/2007.06346) (it improves the results).
 * ResNets are modified by replacing the first convolutional layer and removing the first pooling layer, as described in the original SimCLR paper. The projection head has output dimensionality 128 and a hidden layer with 1024 neurons.
-* Following [the SimSiam paper](https://arxiv.org/abs/2011.10566), we use SGD with momentum 0.9, learning rate 0.03⋅batch_size/256 with cosine annealing, and weight decay 0.0005. Adam works nearly as well but requires smaller weight decay and learning rate warmup, similar to Ermolov et al. 2020 (Adam code is commented out; SGD gives marginally better results).
+* Following [the SimSiam paper](https://arxiv.org/abs/2011.10566), we train for 1000 epochs using SGD with momentum 0.9, learning rate 0.03⋅batch_size/256 with cosine annealing, and weight decay 0.0005. Adam works nearly as well but requires smaller weight decay and learning rate warmup, similar to Ermolov et al. 2020 (Adam code is commented out; SGD gives marginally better results).
 
 **Evaluation** is done on the test set, using the representation before the projection head.
 * kNN classifier uses cosine distance (Euclidean distance yields worse results by ~3 percentage points).

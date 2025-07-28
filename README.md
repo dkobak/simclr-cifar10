@@ -48,6 +48,8 @@ In the spirit of https://github.com/KellerJordan/cifar10-airbench, one can have 
 
 ## Comparison with the literature
 
+TL/DR: This implementation is SOTA.
+
 #### ResNet18
 
 * Chen & He (SimSiam paper https://arxiv.org/abs/2011.10566) report 91.1 linear accuracy (Figure D1). They use SGD with momentum, and we borrow their hyperparameters. Here is an unofficial repository implementing their methods: https://github.com/PatrickHua/SimSiam. It uses linear evaluation trained with data augmentations. Rusak et al. (https://arxiv.org/abs/2407.00143) report 90.9 following the SimSiam paper hyperparameters (Table 1). We get better results (91.8 with `lin augm`) mainly due to grayscaling probability set to 0.1 (with 0.2 our results are similar to Chen & He and Rusak et al.).

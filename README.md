@@ -9,7 +9,7 @@ The code is optimized for readability and hackability. Results are SOTA for SimC
 |Backbone|Batch|Sec/epoch|Loss/batch|kNN k=10|lin precomp|lin augm|
 |--------|-----|----------|----|-----------|-------|----|
 |ResNet18|512  |11.9 s|5.07±.00|91.4±.0|91.7±.1|91.9±.1|
-|ResNet34|512  |19.6 s|5.05±.00|92.1±.1|92.0±.3|92.7±.0|
+|ResNet34|512  |19.6 s|5.05±.00|92.1±.1|92.1±.3|92.6±.1|
 |ResNet50|512  |36.9 s|5.05±.00|92.2±.0|93.4±.0|93.7±.1|
 
 Results after 1000 epochs. Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU workers (the number of available workers can strongly affect the runtime). I used batch size 512 because batch size 1024 did not fit into memory for ResNet50 and I wanted to make the loss values comparable across architectures. Larger batch sizes did not improve the performance on ResNet18, so batch size 512 is sufficient.

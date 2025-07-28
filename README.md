@@ -21,12 +21,8 @@ Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU w
 
 **Evaluation** is done on the test set, using the representation before the projection head.
 * kNN classifier uses cosine distance (Euclidean distance yields worse results by ~3 percentage points).
-* `lin precomp` trains a linear readout on precomputed representations.
-  * For ResNet18 and ResNet34 (512-dim representations) I got the best results using logistic regression from `scikit-learn`.
-  * For ResNet50 (2048-dim representations) I got the best results training a linear readout layer using Adam (learning rate 0.01 for 500 epochs) with cosine annealing. 
-* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). This is slower than `lin precomp` because the representations cannot be precomputed, but tends to give slightly better results.
-  * For ResNet34 and ResNet34 I got the best results using SGD (momentum 0.9 and base learning rate 1 for 100 epochs) with cosine annealing.  
-  * For ResNet50 I got the best results using Adam (learning rate 0.1 for 100 epochs) with cosine annealing.
+* `lin precomp` trains a linear readout on precomputed representations. Here I follow Ermolov et al. and use Adam (learning rate 0.01 for 500 epochs with weight decay 5e-6) with cosine annealing.  For ResNet18 and ResNet34 (512-dim representations) I got almost equally good results using logistic regression from `scikit-learn`; for ResNet50 (2048-dim representations) it was worse.
+* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). This is slower than `lin precomp` because the representations cannot be precomputed, but tends to give slightly better results. I use Adam (learning rate 0.1 for 100 epochs with weight decay 5e-6) with cosine annealing.
 
 Pull requests that improve any of these results are very welcome. I can run suggested PRs on A100.
 

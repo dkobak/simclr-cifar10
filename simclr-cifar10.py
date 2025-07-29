@@ -18,6 +18,7 @@ from sklearn.linear_model import LogisticRegression
 ###################### PARAMS ##############################
 
 BACKBONE = "resnet18"
+
 BATCH_SIZE = 512
 N_EPOCHS = 1000
 N_CPU_WORKERS = 16
@@ -29,6 +30,7 @@ PROJECTOR_OUTPUT_SIZE = 128
 CROP_LOW_SCALE = 0.2
 GRAYSCALE_PROB = 0.1   # important
 PRINT_EVERY_EPOCHS = 10
+
 MODEL_FILENAME = f"simclr-{BACKBONE}-{np.random.randint(10000):04}.pt"
 
 ###################### DATA LOADER #########################
@@ -242,7 +244,11 @@ print(f"Linear accuracy (sklearn): {lin.score(X_test, y_test)}", flush=True)
 
 N_EPOCHS = 500
 ADAM_LR = 0.01
-ADAM_WD = 5e-6   # important
+
+if BACKBONE == "resnet50":
+    ADAM_WD = 0      # important
+else:
+    ADAM_WD = 5e-6   # important
 
 X_train = torch.tensor(X_train, device=device)
 X_test = torch.tensor(X_test, device=device)
@@ -277,7 +283,6 @@ print(f"Linear accuracy (Adam on precomputed representations): {acc}", flush=Tru
 
 N_EPOCHS = 100
 ADAM_LR = 0.1
-ADAM_WD = 5e-6
 
 transforms_classifier = transforms.Compose(
     [

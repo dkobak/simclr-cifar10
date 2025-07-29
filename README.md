@@ -10,7 +10,7 @@ The code is optimized for readability and hackability. Results are SOTA for SimC
 |--------|-----|----------|----|-----------|-------|----|
 |ResNet18|512  |11.9 s|5.07±.00|91.4±.0|91.7±.1|91.9±.1|
 |ResNet34|512  |19.6 s|5.05±.00|92.1±.1|92.1±.3|92.6±.1|
-|ResNet50|512  |36.9 s|5.05±.00|92.2±.0|93.4±.0|93.7±.1|
+|ResNet50|512  |36.9 s|5.05±.00|92.6±.1|93.4±.0|93.7±.1|
 
 Results after 1000 epochs. Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU workers (the number of available workers can strongly affect the runtime). I used batch size 512 because batch size 1024 did not fit into memory for ResNet50 and I wanted to make the loss values comparable across architectures. Larger batch sizes did not improve the performance on ResNet18, so batch size 512 is sufficient.
 
@@ -21,8 +21,8 @@ Results after 1000 epochs. Standard deviations are over 3 runs. Runtimes are mea
 
 **Evaluation** is done on the test set, using the representation before the projection head.
 * kNN classifier uses cosine distance (Euclidean distance yields worse results by ~3 percentage points).
-* `lin precomp` trains a linear readout on precomputed representations. Here I follow Ermolov et al. and use Adam (learning rate 0.01 for 500 epochs with weight decay 5e-6) with cosine annealing.  For ResNet18 and ResNet34 (512-dim representations) I got almost equally good results using logistic regression from `scikit-learn`; for ResNet50 (2048-dim representations) it was worse.
-* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). This is slower than `lin precomp` because the representations cannot be precomputed, but tends to give slightly better results. I use Adam (learning rate 0.1 for 100 epochs with weight decay 5e-6) with cosine annealing.
+* `lin precomp` trains a linear readout on precomputed representations. Here I follow Ermolov et al. and use Adam (learning rate 0.01 for 500 epochs) with cosine annealing. Weight decay 5e-6 for ResNet18 and ResNet34 (512-dim representations) and no weight decay for ResNet50 (2048-dim representation). Logistic regression from `scikit-learn` gave slightly worse restuls.
+* `lin augm` trains a linear readout using data augmentations (crops and horizontal flips). This is slower than `lin precomp` because the representations cannot be precomputed, but tends to give better results. I use Adam (learning rate 0.1 for 100 epochs) with cosine annealing. Weight decay 5e-6 for ResNet18 and ResNet34 and no weight decay for ResNet50.
 
 Pull requests that improve any of these results are very welcome. I can run suggested PRs on A100.
 

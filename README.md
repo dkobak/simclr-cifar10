@@ -12,6 +12,9 @@ The code is optimized for readability and hackability. Results are SOTA for SimC
 |ResNet34|512  |19.6 s|5.05±.00|92.1±.1|92.1±.3|92.6±.1|
 |ResNet50|512  |36.9 s|5.05±.00|92.6±.1|93.4±.0|93.7±.1|
 
+![t-SNE visualizations of SimCLR on CIFAR-10](simclr-cifar10.png)
+*Figure: t-SNE visualization (default parameters) of the representations before the projection head.*
+
 Results after 1000 epochs. Standard deviations are over 3 runs. Runtimes are measured on A100 with 16 CPU workers (the number of available workers can strongly affect the runtime). I used batch size 512 because batch size 1024 did not fit into memory for ResNet50 and I wanted to make the loss values comparable across architectures. Larger batch sizes did not improve the performance on ResNet18, so batch size 512 is sufficient.
 
 **Training** is done only on the training set --- this is important because doing SimCLR training on training+test sets leads to noticeably higher evaluation results.

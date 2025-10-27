@@ -1,6 +1,6 @@
 # SimCLR on CIFAR-10 with ResNets in PyTorch
 
-This is a barebones PyTorch implementation of [SimCLR](https://arxiv.org/abs/2002.05709) on CIFAR10 with ResNet18/ResNet34/ResNet50 backbones. The purpose is to provide an optimized single-file implementation, with minimial dependencies (only `torch` and `torchvision`, plus `scikit-learn` for evaluation). To use, simply run 
+This is a barebones PyTorch implementation of [SimCLR](https://arxiv.org/abs/2002.05709) on CIFAR10 with ResNet18/ResNet34/ResNet50 backbones. The purpose is to provide an optimized single-file implementation, with minimal dependencies (only `torch` and `torchvision`, plus `scikit-learn` for evaluation). To use, simply run 
 ```
 python simclr-cifar10.py
 ```
